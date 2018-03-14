@@ -8,4 +8,6 @@ syntax: glob
 *.dcu
 *.exe
 *.ini
+.git/*
+.gitignore
 *.dsk
