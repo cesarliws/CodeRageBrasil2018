@@ -1,0 +1,11 @@
+syntax: glob
+*~*
+*.local
+*.user
+*.skincfg
+*.identcache
+*.stat
+*.dcu
+*.exe
+*.ini
+*.dsk
