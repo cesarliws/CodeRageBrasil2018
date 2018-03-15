@@ -1,4 +1,4 @@
-# CodeRageBrasil2018
+# Coderage Brasil 2018 - Código da apresentação "TDD com Código Legado"
 
 ### Hands ON - Refactory do projeto exemplo "FireDAC Getting Started SQLite" com TDD
 
