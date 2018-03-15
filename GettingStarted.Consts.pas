@@ -7,7 +7,7 @@ const
   DEFAULT_NEW_CATEGORY         = 'New category';
   DEFAULT_NEW_DESCRIPTION      = 'New description';
   FIREDAC_URL                  = 'http://www.embarcadero.com/products/rad-studio/firedac';
-  HTM_FILE_EXT                 = '.htm';
+  README_HTM_FILE_NAME         = 'readme.html';
 
 resourcestring
   SDATABASE_HAS_PROBLEMS_ERROR = 'Database has problems !';

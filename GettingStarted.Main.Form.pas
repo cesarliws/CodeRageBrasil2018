@@ -187,10 +187,10 @@ end;
 
 procedure TGettingStartedMainForm.InfoLabelClick(Sender: TObject);
 var
-  sHtmFile: String;
+  ReadmeFile: String;
 begin
-  sHtmFile := ChangeFileExt(Application.ExeName, HTM_FILE_EXT);
-  FDShell(sHtmFile, '');
+  ReadmeFile := ExtractFilePath(Application.ExeName) + README_HTM_FILE_NAME;
+  FDShell(ReadmeFile, '');
 end;
 
 procedure TGettingStartedMainForm.FiredacImageClick(Sender: TObject);

@@ -11,3 +11,4 @@ syntax: glob
 .git/*
 .gitignore
 *.dsk
+Win32/*
