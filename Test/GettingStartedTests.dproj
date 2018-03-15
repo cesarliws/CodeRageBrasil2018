@@ -81,7 +81,7 @@
         </DelphiCompile>
         <DCCReference Include="Common\Common.Testing.pas"/>
         <DCCReference Include="Common\GettingStarted.Testing.Config.pas"/>
-        <DCCReference Include="..\Config\GettingStared.Config.pas"/>
+        <DCCReference Include="..\Config\GettingStarted.Config.pas"/>
         <DCCReference Include="GettingStart.Database.Test.pas"/>
         <DCCReference Include="GettingStared.Config.Test.pas"/>
         <DCCReference Include="..\GettingStarted.Main.DataModule.pas">
@@ -89,6 +89,8 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
+        <DCCReference Include="..\GettingStarted.Sql.pas"/>
+        <DCCReference Include="..\GettingStarted.Consts.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

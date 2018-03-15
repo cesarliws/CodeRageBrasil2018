@@ -49,20 +49,21 @@ type
 
   TMainDataModule = class(TDataModule)
     BackupSQLite: TFDSQLiteBackup;
-    CategoriesDataSource: TDataSource;
     CategoriesQuery: TFDQuery;
     DatabaseConnection: TFDConnection;
     DriverLinkSQLite: TFDPhysSQLiteDriverLink;
     ErrorDialogFireDAC: TFDGUIxErrorDialog;
     FunctionSQLite: TFDSQLiteFunction;
     LoginDialogFireDAC: TFDGUIxLoginDialog;
-    ProductsDataSource: TDataSource;
     ProductsQuery: TFDQuery;
     SecuritySQLite: TFDSQLiteSecurity;
     ValidateSQLite: TFDSQLiteValidate;
     WaitCursorFireDAC: TFDGUIxWaitCursor;
-
+    CategoriesDataSource: TDataSource;
+    procedure DataModuleDestroy(Sender: TObject);
+    ///
     procedure DatabaseConnectionBeforeConnect(Sender: TObject);
+    procedure DatabaseConnectionBeforeDisconnect(Sender: TObject);
     procedure FunctionSQLiteCalculate(AFunc: TSQLiteFunctionInstance; AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
     procedure ValidateSQLiteProgress(ASender: TFDPhysDriverService; const AMessage: String);
   private
@@ -76,10 +77,10 @@ type
     procedure Delete(const Categoria: string);
     procedure Update(Valor1, Valor2: Integer);
     ///
-    procedure Backup(const SourceDatabase, SourcePassword, BackupDatabase, BackupPassword: string);
+    procedure Backup(const Database, Password, BackupDatabase, BackupPassword: string);
     procedure OpenDatabase(const FileName: string);
     procedure SetDatabasePassword(const Database, Password, NewPassword: string; Action: TDatabaseAction);
-    procedure ValidateDatabase(const ADatabase, APassword: string; ValidationAction: TDatabaseValidation);
+    procedure ValidateDatabase(const Database, Password: string; ValidationAction: TDatabaseValidation);
 
     procedure OpenDefaultDatabase;
     ///
@@ -98,28 +99,24 @@ implementation
 {$R *.dfm}
 
 uses
-  GettingStared.Config;
+  GettingStarted.Consts,
+  GettingStarted.Sql,
+  GettingStarted.Config;
 
-const
-  DRIVERID_SQLITE_PARAM = 'DriverID=SQLite';
-  SDATABASE_PARAM       = 'Database=';
-  ///
-  DELETE_CATEGORIES_SQL     = 'delete from Categories where CategoryName like :N';
-  INSERT_CATEGORIES_SQL     = 'insert into Categories(CategoryName, Description, Picture) values(:N, :D, :P)';
-  SELECT_MAX_CATEGORYID_SQL = 'select MAX(CategoryID) from Categories';
-  UPDATE_PRODUCTS_SQL       = 'update Products set UnitPrice = UnitPrice * :P1 + :P2 where ProductID < 3';
-
-resourcestring
-  SDATABASE_HAS_PROBLEMS_ERROR = 'Database has problems !';
-  SDATABASE_IS_VALID_MESSAGE   = 'Database is valid';
-
-procedure TMainDataModule.Backup(const SourceDatabase, SourcePassword, BackupDatabase, BackupPassword: string);
+procedure TMainDataModule.DataModuleDestroy(Sender: TObject);
 begin
-  if SourceDatabase = '' then
+  CategoriesQuery    .Close;
+  ProductsQuery      .Close;
+  DatabaseConnection .Close;
+end;
+
+procedure TMainDataModule.Backup(const Database, Password, BackupDatabase, BackupPassword: string);
+begin
+  if Database = '' then
     Exit;
 
-  BackupSQLite.Database := SourceDatabase;
-  BackupSQLite.Password := SourcePassword;
+  BackupSQLite.Database     := Database;
+  BackupSQLite.Password     := Password;
 
   BackupSQLite.DestDatabase := BackupDatabase;
   BackupSQLite.DestPassword := BackupPassword;
@@ -131,10 +128,16 @@ begin
   FunctionSQLite.Active := True;
 end;
 
+procedure TMainDataModule.DatabaseConnectionBeforeDisconnect(Sender: TObject);
+begin
+  FunctionSQLite.Active := False;
+end;
+
 procedure TMainDataModule.Delete(const Categoria: string);
 begin
   if not DatabaseConnection.Connected then
     Exit;
+
   // Delete a record
   DatabaseConnection.ExecSQL(DELETE_CATEGORIES_SQL, [Categoria]);
   CategoriesQuery.Refresh;
@@ -154,12 +157,12 @@ begin
 
   if Categoria = '' then
   begin
-    raise EDataValidation.Create('Categoria é obrigatória');
+    raise EDataValidation.Create(SREQUIRED_CATEGORY_ERROR);
   end;
 
   if Descricao = '' then
   begin
-    raise EDataValidation.Create('Descricao é obrigatória');
+    raise EDataValidation.Create(SREQUIRED_DESCRIPTION_ERROR);
   end;
 
   // Insert a record
@@ -179,6 +182,7 @@ end;
 procedure TMainDataModule.OpenDatabase(const FileName: string);
 begin
   DatabaseConnection.Close;
+
   // create temporary connection definition
   DatabaseConnection.Params.Clear;
   DatabaseConnection.Params.Add(DRIVERID_SQLITE_PARAM);
@@ -196,6 +200,7 @@ begin
   SecuritySQLite.Database := Database;
   SecuritySQLite.Password := Password;
   SecuritySQLite.ToPassword := Password;
+
   case Action of
     TDatabaseAction.SetPassword:
       SecuritySQLite.SetPassword;
@@ -224,6 +229,7 @@ begin
       Config.DatabaseFile := TConfig.GetDefaultDatabaseFileName;
       Config.Save;
     end;
+
     Config.Load;
     OpenDatabase(Config.DatabaseFile );
   finally
@@ -240,19 +246,20 @@ procedure TMainDataModule.Update(Valor1, Valor2: Integer);
 begin
   if not IsConnected then
     Exit;
+
   // Update records
-  DatabaseConnection.ExecSQL(UPDATE_PRODUCTS_SQL,
-    [Valor1, Valor2]);
+  DatabaseConnection.ExecSQL(UPDATE_PRODUCTS_SQL, [Valor1, Valor2]);
   ProductsQuery.Refresh;
 end;
 
-procedure TMainDataModule.ValidateDatabase(const ADatabase, APassword: string; ValidationAction: TDatabaseValidation);
+procedure TMainDataModule.ValidateDatabase(const Database, Password: string; ValidationAction: TDatabaseValidation);
 begin
-  if ADatabase = '' then
+  if Database = '' then
     Exit;
 
-  ValidateSQLite.Database := ADatabase;
-  ValidateSQLite.Password := APassword;
+  ValidateSQLite.Database := Database;
+  ValidateSQLite.Password := Password;
+
   case ValidationAction of
     TDatabaseValidation.Analyze:
       ValidateSQLite.Analyze;
@@ -277,4 +284,6 @@ begin
 end;
 
 end.
+
+
 

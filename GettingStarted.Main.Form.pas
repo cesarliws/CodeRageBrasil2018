@@ -80,6 +80,8 @@ type
     ValidateImage: TImage;
     ValidateTabSheet: TTabSheet;
     ValidationActionsRadioGroup: TRadioGroup;
+    ProductsDataSource: TDataSource;
+    CategoriesDataSource: TDataSource;
 
     procedure ApplyButtonClick(Sender: TObject);
     procedure BackupButtonClick(Sender: TObject);
@@ -94,6 +96,8 @@ type
     procedure ValidateButtonClick(Sender: TObject);
   private
     FMainDataModule: TMainDataModule;
+    procedure ConfigureControls;
+    procedure LoadDefaultDatabase;
     procedure ShowDatabaseLog(const Text: string);
   end;
 
@@ -103,30 +107,15 @@ var
 implementation
 
 uses
-  FireDAC.Stan.Util;
-
-const
-  BACKUP_FILE_EXT         = '.backup';
-  DEFAULT_NEW_CATEGORY    = 'New category';
-  DEFAULT_NEW_DESCRIPTION = 'New description';
-  FIREDAC_URL             = 'http://www.embarcadero.com/products/rad-studio/firedac';
-  HTM_FILE_EXT            = '.htm';
-
-resourcestring
-  SLAST_CATEGORY_ID_CAPTION = 'Last CategoryID = ';
-  SOPEN_DATABASE_TEXT       = '<Open database...>';
+  FireDAC.Stan.Util,
+  GettingStarted.Consts;
 
 {$R *.dfm}
 
 procedure TGettingStartedMainForm.FormCreate(Sender: TObject);
 begin
-  FMainDataModule := TMainDataModule.Create(Self);
-  FMainDataModule.OnDatabaseLog := ShowDatabaseLog;
-
-  ConnectionDefsComboBox.Clear;
-  ConnectionDefsComboBox.Items.Add(SOPEN_DATABASE_TEXT);
-
-  OpenDialog.InitialDir := FMainDataModule.GetConnectionDefFileName
+  LoadDefaultDatabase;
+  ConfigureControls;
 end;
 
 procedure TGettingStartedMainForm.ConnectionDefsComboBoxClick(Sender: TObject);
@@ -171,6 +160,16 @@ begin
   FMainDataModule.Backup(DatabaseEdit.Text, PasswordEdit.Text, BackupDatabaseEdit.Text, BackupPasswordEdit.Text);
 end;
 
+procedure TGettingStartedMainForm.ConfigureControls;
+begin
+  MainPageControl.ActivePage := MasterDetailTabSheet;
+
+  ConnectionDefsComboBox.Clear;
+  ConnectionDefsComboBox.Items.Add(SOPEN_DATABASE_TEXT);
+
+  OpenDialog.InitialDir := FMainDataModule.GetConnectionDefFileName;
+end;
+
 procedure TGettingStartedMainForm.ValidateButtonClick(Sender: TObject);
 begin
   LogMemo.Clear;
@@ -197,6 +196,13 @@ end;
 procedure TGettingStartedMainForm.FiredacImageClick(Sender: TObject);
 begin
   FDShell(FIREDAC_URL, '');
+end;
+
+procedure TGettingStartedMainForm.LoadDefaultDatabase;
+begin
+  FMainDataModule := TMainDataModule.Create(Self);
+  FMainDataModule.OnDatabaseLog := ShowDatabaseLog;
+  FMainDataModule.OpenDefaultDatabase;
 end;
 
 procedure TGettingStartedMainForm.ShowDatabaseLog(const Text: string);

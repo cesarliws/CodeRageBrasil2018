@@ -4,7 +4,7 @@ interface
 
 uses
   Spring.Testing,
-  GettingStared.Config;
+  GettingStarted.Config;
 
 type
   TConfigTest = class(TTestCase)
@@ -22,8 +22,6 @@ type
 
 implementation
 
-
-
 procedure TConfigTest.SetUp;
 begin
   FConfig := TConfig.Create;
@@ -33,7 +31,6 @@ end;
 procedure TConfigTest.TearDown;
 begin
   FConfig.DeleteFile;
-
   FConfig.Free;
   FConfig := nil;
 end;

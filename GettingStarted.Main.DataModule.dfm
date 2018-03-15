@@ -1,5 +1,6 @@
 object MainDataModule: TMainDataModule
   OldCreateOrder = False
+  OnDestroy = DataModuleDestroy
   Height = 444
   Width = 540
   object WaitCursorFireDAC: TFDGUIxWaitCursor
@@ -33,11 +34,6 @@ object MainDataModule: TMainDataModule
     Left = 176
     Top = 15
   end
-  object ProductsDataSource: TDataSource
-    DataSet = ProductsQuery
-    Left = 312
-    Top = 72
-  end
   object CategoriesDataSource: TDataSource
     DataSet = CategoriesQuery
     Left = 312
@@ -52,6 +48,7 @@ object MainDataModule: TMainDataModule
       'Password=12345')
     LoginPrompt = False
     BeforeConnect = DatabaseConnectionBeforeConnect
+    BeforeDisconnect = DatabaseConnectionBeforeDisconnect
     Left = 48
     Top = 64
   end

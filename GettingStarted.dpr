@@ -14,14 +14,15 @@ program GettingStarted;
 uses
   Forms,
   GettingStarted.Main.Form in 'GettingStarted.Main.Form.pas' {GettingStartedMainForm},
-  GettingStared.Config in 'Config\GettingStared.Config.pas',
-  GettingStarted.Main.DataModule in 'GettingStarted.Main.DataModule.pas' {MainDataModule: TDataModule};
+  GettingStarted.Config in 'Config\GettingStarted.Config.pas',
+  GettingStarted.Main.DataModule in 'GettingStarted.Main.DataModule.pas' {MainDataModule: TDataModule},
+  GettingStarted.Consts in 'GettingStarted.Consts.pas',
+  GettingStarted.Sql in 'GettingStarted.Sql.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.CreateForm(TGettingStartedMainForm, GettingStartedMainForm);
-  Application.CreateForm(TMainDataModule, MainDataModule);
   Application.Run;
 end.

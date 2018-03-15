@@ -1,4 +1,4 @@
-unit GettingStared.Config;
+unit GettingStarted.Config;
 
 interface
 

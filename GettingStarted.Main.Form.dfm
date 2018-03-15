@@ -440,6 +440,7 @@ object GettingStartedMainForm: TGettingStartedMainForm
             Margins.Right = 2
             Margins.Bottom = 2
             Align = alTop
+            DataSource = CategoriesDataSource
             TabOrder = 0
             TitleFont.Charset = DEFAULT_CHARSET
             TitleFont.Color = clWindowText
@@ -457,6 +458,7 @@ object GettingStartedMainForm: TGettingStartedMainForm
             Margins.Right = 2
             Margins.Bottom = 2
             Align = alClient
+            DataSource = ProductsDataSource
             TabOrder = 1
             TitleFont.Charset = DEFAULT_CHARSET
             TitleFont.Color = clWindowText
@@ -1351,7 +1353,17 @@ object GettingStartedMainForm: TGettingStartedMainForm
   object OpenDialog: TOpenDialog
     DefaultExt = '*.sdb'
     Filter = 'SQLite|*.sdb'
-    Left = 400
-    Top = 208
+    Left = 344
+    Top = 8
+  end
+  object ProductsDataSource: TDataSource
+    DataSet = MainDataModule.ProductsQuery
+    Left = 288
+    Top = 264
+  end
+  object CategoriesDataSource: TDataSource
+    DataSet = MainDataModule.CategoriesQuery
+    Left = 288
+    Top = 143
   end
 end

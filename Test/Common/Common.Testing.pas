@@ -2,23 +2,25 @@ unit Common.Testing;
 
 interface
 
+{$IFNDEF TESTINSIGHT}
+uses
+  DUnitTestRunner;
+{$ELSE}
+uses
+  TestInsight.Client,
+  TestInsight.DUnit;
+{$ENDIF}
+
 procedure RunRegisteredTests;
 
 implementation
 
-uses
-{$IFDEF TESTINSIGHT}
-  TestInsight.DUnit;
-{$ELSE}
-  DUnitTestRunner;
-{$ENDIF}
-
 procedure RunRegisteredTests;
 begin
-{$IFDEF TESTINSIGHT}
-  TestInsight.DUnit.RunRegisteredTests;
-{$ELSE}
+{$IFNDEF TESTINSIGHT}
   DUnitTestRunner.RunRegisteredTests;
+{$ELSE}
+  TestInsight.DUnit.RunRegisteredTests;
 {$ENDIF}
 end;
 
