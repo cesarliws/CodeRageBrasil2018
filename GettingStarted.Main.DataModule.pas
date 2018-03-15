@@ -60,10 +60,10 @@ type
     ValidateSQLite: TFDSQLiteValidate;
     WaitCursorFireDAC: TFDGUIxWaitCursor;
     CategoriesDataSource: TDataSource;
-    procedure DataModuleDestroy(Sender: TObject);
     ///
     procedure DatabaseConnectionBeforeConnect(Sender: TObject);
     procedure DatabaseConnectionBeforeDisconnect(Sender: TObject);
+    procedure DataModuleDestroy(Sender: TObject);
     procedure FunctionSQLiteCalculate(AFunc: TSQLiteFunctionInstance; AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
     procedure ValidateSQLiteProgress(ASender: TFDPhysDriverService; const AMessage: String);
   private

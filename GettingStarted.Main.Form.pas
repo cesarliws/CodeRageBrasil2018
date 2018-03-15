@@ -180,8 +180,8 @@ procedure TGettingStartedMainForm.OpenButtonClick(Sender: TObject);
 begin
   if OpenDialog.Execute then
   begin
-    DatabaseEdit.Text := OpenDialog.FileName;
-    BackupDatabaseEdit.Text := ChangeFileExt(DatabaseEdit.Text, BACKUP_FILE_EXT);
+    DatabaseEdit       .Text := OpenDialog.FileName;
+    BackupDatabaseEdit .Text := ChangeFileExt(DatabaseEdit.Text, BACKUP_FILE_EXT);
   end;
 end;
 
